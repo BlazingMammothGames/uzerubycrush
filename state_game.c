@@ -556,7 +556,7 @@ u8 PossibleMoves()
 	// vertical pairings first
 	for(u8 x = 0; x < 8; x++)
 	{
-		for(u8 y = 0; y < 7; y += 2)
+		for(u8 y = 0; y < 8; y += 2)
 		{
 			SwapJewelsTemp(x, y, x, y + 1);
 			if(TempAllowableSwap(x, y, x, y + 1) > 0)
@@ -568,7 +568,7 @@ u8 PossibleMoves()
 	// now horizontal pairings
 	for(u8 y = 0; y < 8; y++)
 	{
-		for(u8 x = 0; x < 7; x += 2)
+		for(u8 x = 0; x < 8; x += 2)
 		{
 			SwapJewelsTemp(x, y, x + 1, y);
 			if(TempAllowableSwap(x, y, x + 1, y) > 0)
