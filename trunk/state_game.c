@@ -6,6 +6,7 @@ u8 combo;
 u32 level = 1;
 u32 playerScore = 0;
 u32 highScore = 0;
+u32 lastScoreLevel = 0;
 u32 nextScoreLevel = 500;
 u8 gameOver = 0;
 u8 hlX, hlY, grabX, grabY;
@@ -120,6 +121,26 @@ void DrawLevel()
 	{
 		SetTile(x + 2, 11, SCORE_OFFSET + ((level % pow10((6 - x) + 1)) / pow10(6 - x)));
 	}
+}
+
+void DrawBar()
+{
+	u32 scoreDone = playerScore - lastScoreLevel;
+	u32 scoreTotal = nextScoreLevel - lastScoreLevel;
+	
+	// calculate the number of full bars to display
+	u8 numFull = (u8)(255 & ((scoreDone << 4) / scoreTotal));
+	
+	// now fill the full bars in
+	for(u8 i = 0; i < numFull; i++)
+		SetTile(11 + i, 23, MAP_BAR_FILLS + 8);
+		
+	// now we draw the not-full bar
+	/*if(numFull < 16)
+	{
+		u8 partBlock = (u8)(15 & ((scoreDone - (scoreTotal >> 4)) << 3) / (scoreTotal >> 4));
+		SetTile(11 + numFull, 23, MAP_BAR_FILLS + partBlock);
+	}*/
 }
 
 void SetHlXY(u8 x, u8 y)
@@ -816,6 +837,7 @@ void NextLevel()
 	// calculate the next level score
 	level++;
 	DrawLevel();
+	lastScoreLevel = nextScoreLevel;
 	nextScoreLevel = 500 * level * level;
 	
 	// handle the level up
@@ -867,6 +889,7 @@ void InitGame()
 	// reset the variables
 	playerScore = 0;
 	level = 1;
+	lastScoreLevel = 0;
 	nextScoreLevel = 500;
 	frameCount = 0;
 	lastCount = 0;
@@ -999,9 +1022,12 @@ void DoGame()
 			if(PossibleMoves() == 0)
 				HandleGameOver();
 			
-			// 
+			// new level!
 			if(playerScore >= nextScoreLevel)
 				NextLevel();
+				
+			// update the bar
+			DrawBar();
 		}
 		
 		HideGrab();
