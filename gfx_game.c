@@ -78,6 +78,7 @@ const char map_score_purple[] PROGMEM ={
 const char map_bar_fills[] PROGMEM ={
 9,1
 ,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,0xc0};
+#define MAP_BAR_FILLS	(0xb8)
 
 #define MAP_PAUSE_WIDTH 10
 #define MAP_PAUSE_HEIGHT 6

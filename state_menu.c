@@ -18,7 +18,7 @@ void InitMenu_Main()
 	// fill the bg
 	Fill(0, 0, 30, 28, ' ');
 	
-	PrintStrCenter(10, "Bejeweled!");
+	PrintStrCenter(10, "Ruby Crush!");
 	
 	SetTile(8, 12 + currentOpt, 127);
 	
