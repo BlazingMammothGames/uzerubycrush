@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<gfx-xform version="1">
+    <input file="highlight.png" type="png" tile-width="8" tile-height="8" width="16" height="40" />
+    <output file="gfx_highlight.c">
+        <tiles var-name="tiles_hl"/>
+        <maps pointers-size="8">
+			<map var-name="hl_tl_a" left="0" top="0" width="1" height="1"/>
+			<map var-name="hl_tr_a" left="1" top="0" width="1" height="1"/>
+			<map var-name="hl_bl_a" left="0" top="1" width="1" height="1"/>
+			<map var-name="hl_br_a" left="1" top="1" width="1" height="1"/>
+			<map var-name="hl_tl_b" left="0" top="2" width="1" height="1"/>
+			<map var-name="hl_tr_b" left="1" top="2" width="1" height="1"/>
+			<map var-name="hl_bl_b" left="0" top="3" width="1" height="1"/>
+			<map var-name="hl_br_b" left="1" top="3" width="1" height="1"/>
+			
+			<map var-name="spr_hint" left="0" top="4" width="1" height="1"/>
+		</maps>	
+    </output>
+</gfx-xform>
