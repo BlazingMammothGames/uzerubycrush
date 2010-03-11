@@ -33,6 +33,7 @@
 
 // sounds
 #include "sfx_patches.c"
+#include "msc_gobby.c"
 
 // utilities
 #include "text.c"
@@ -43,7 +44,7 @@ int padPressed[2] = {0,0};
 int padReleased[2] = {0,0};
 
 // globals
-char musicOn = 1;
+char musicOn = 0;
 char playMode;
 
 // game states
@@ -51,6 +52,10 @@ char playMode;
 #define STATE_GAME	(1)
 char gameState;
 char nextState;
+
+// play modes
+#define MODE_CLASSIC	(0)
+#define MODE_TIMED		(1)
 
 // states
 #include "state_menu.c"
@@ -63,7 +68,10 @@ void DoIntro()
 	int rndSeed = 0;
 	
 	SetTileTable(tiles_mammoth);
+	Fill(0, 0, 30, 28, 0);
+	WaitVsync(1);
 	DrawMap2(0, 0, map_mammoth);
+	FadeIn(1, true);
 	
 	// game loop
 	char quit = 0;
