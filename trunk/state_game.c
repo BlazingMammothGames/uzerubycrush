@@ -1,5 +1,3 @@
-//#include <math.h>
-
 // globals
 u8 jewels[8][8], tempJewels[8][8];
 u8 combo;
@@ -12,6 +10,7 @@ u8 gameOver = 0;
 u8 hlX, hlY, grabX, grabY;
 u32 frameCount = 0, lastCount = 0;
 u8 movingHl = 0, grabbing = 0, showHint = 0;
+u32 timer, timerRate;
 
 u32 pow10(s8 p)
 {
@@ -609,7 +608,7 @@ u32 ClearAndDropGems()
 	HideHint();
 	
 	// trigger the clear FX
-	TriggerFx(0, 0xff, true);
+	TriggerFx(4, 0xff, true);
 	
 	// use a temporary buffer so that we can do t's and l's
 	for(u8 y = 0; y < 8; y++)
@@ -832,7 +831,7 @@ u32 ClearAndDropGems()
 void NextLevel()
 {
 	// trigger the level fx
-	TriggerFx(3, 0xff, true);
+	TriggerFx(7, 0xff, true);
 	
 	// calculate the next level score
 	level++;
@@ -895,6 +894,8 @@ void InitGame()
 	lastCount = 0;
 	hlX = 0;
 	hlY = 0;
+	timer = ;
+	timerRate = ;
 	
 	// do the overlay sprites
 	SetHlXY(0, 0);
@@ -917,6 +918,9 @@ void DoGame()
 	{
 		nextState = STATE_MENU;
 		gameOver = 0;
+		HideHl();
+		HideGrab();
+		HideHint();
 		return;
 	}
 
@@ -949,7 +953,7 @@ void DoGame()
 		if(padHeld[0] & (BTN_DOWN | BTN_UP | BTN_RIGHT | BTN_LEFT))
 		{
 			SetHlXY(hlX, hlY);
-			TriggerFx(2, 0xff, true);
+			TriggerFx(6, 0xff, true);
 			ClearPoints();
 		}
 		// no long holding down, don't move the HL anymore!
@@ -977,7 +981,7 @@ void DoGame()
 			SetHlXY(hlX, hlY);
 			movingHl = 1;
 			lastCount = frameCount;
-			TriggerFx(2, 0xff, true);
+			TriggerFx(6, 0xff, true);
 			ClearPoints();
 		}
 	}
@@ -991,7 +995,7 @@ void DoGame()
 		// check to see if we tried an invalid swap
 		if(AllowableSwap(hlX, hlY, grabX, grabY) == 0)
 		{
-			TriggerFx(1, 0xff, true);
+			TriggerFx(5, 0xff, true);
 		
 			// wait for a bit
 			WaitVsync(10);
@@ -1020,11 +1024,31 @@ void DoGame()
 				
 			// check for game over
 			if(PossibleMoves() == 0)
-				HandleGameOver();
+			{
+				if(playMode == MODE_CLASSIC)
+				{
+					// in regular mode, quit
+					HandleGameOver();
+				}
+				else
+				{
+					// in timed mode, recreate the board
+					// flash the gems
+					for(u8 y = 0; y < 8; y++)
+						for(u8 x = 0; x < 8; x++)
+							DrawFlashJewel(x, y);
+					
+					WaitVsync(5);
+					InitJewels();
+				}
+			}
 			
-			// new level!
-			if(playerScore >= nextScoreLevel)
-				NextLevel();
+			// check for new level
+			if(playMode == MODE_CLASSIC)
+			{
+				if(playerScore >= nextScoreLevel)
+					NextLevel();
+			}
 				
 			// update the bar
 			DrawBar();

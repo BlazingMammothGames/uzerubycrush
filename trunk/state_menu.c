@@ -24,7 +24,7 @@ void InitMenu_Main()
 	
 	PrintStr(10, 12, "Play Classic");
 	PrintStr(10, 13, "Play Timed");
-	PrintStr(10, 14, "Music (on)");
+	PrintStr(10, 14, "Music (off)");
 	PrintStr(10, 15, "How To Play");
 	PrintStr(10, 16, "Credits");
 	
@@ -115,12 +115,12 @@ void DoMenu_Main()
 		
 		if(currentOpt == MENUOPT_CLASSIC)
 		{
-			playMode = 0;
+			playMode = MODE_CLASSIC;
 			nextState = STATE_GAME;
 		}
 		else if(currentOpt == MENUOPT_TIMED)
 		{
-			playMode = 1;
+			playMode = MODE_TIMED;
 			nextState = STATE_GAME;
 		}
 		else if(currentOpt == MENUOPT_MUSIC)
@@ -131,12 +131,12 @@ void DoMenu_Main()
 			// draw the music indicator
 			if(!musicOn)
 			{
-				//StopSong();
+				StopSong();
 				PrintStr(16, 14, "(Off)");
 			}
 			else
 			{
-				//StartSong(song_finalfantasy);
+				StartSong(song_gobby);
 				PrintStr(16, 14, "(On) ");
 			}
 		}
