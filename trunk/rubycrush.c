@@ -37,6 +37,7 @@
 
 // utilities
 #include "text.c"
+#include "hiscores.c"
 
 // joypad states
 int padHeld[2] = {0,0};
@@ -65,7 +66,7 @@ char nextState;
 void DoIntro()
 {
 	// random number generator seed
-	int rndSeed = 0;
+	u16 rndSeed = 0;
 	
 	SetTileTable(tiles_mammoth);
 	Fill(0, 0, 30, 28, 0);

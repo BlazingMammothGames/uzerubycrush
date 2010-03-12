@@ -127,19 +127,25 @@ void DrawBar()
 	u32 scoreDone = playerScore - lastScoreLevel;
 	u32 scoreTotal = nextScoreLevel - lastScoreLevel;
 	
+	// calculate the number of pixel columns to display
+	u32 numCol = (scoreDone << 7) / scoreTotal;
+	
 	// calculate the number of full bars to display
-	u8 numFull = (u8)(255 & ((scoreDone << 4) / scoreTotal));
+	u8 numFull = (u8)(numCol / 8);
+	
+	// calculate the number of part bars to display
+	u8 numPart = (u8)(numCol % 8);
+	
+	// clear the old bar
+	for(u8 i = 0; i < 16; i++)
+		SetTile(11 + i, 23, MAP_BAR_FILLS);
 	
 	// now fill the full bars in
 	for(u8 i = 0; i < numFull; i++)
 		SetTile(11 + i, 23, MAP_BAR_FILLS + 8);
 		
-	// now we draw the not-full bar
-	/*if(numFull < 16)
-	{
-		u8 partBlock = (u8)(15 & ((scoreDone - (scoreTotal >> 4)) << 3) / (scoreTotal >> 4));
-		SetTile(11 + numFull, 23, MAP_BAR_FILLS + partBlock);
-	}*/
+	if(numFull < 16)
+		SetTile(11 + numFull, 23, MAP_BAR_FILLS + numPart);
 }
 
 void SetHlXY(u8 x, u8 y)
@@ -894,8 +900,8 @@ void InitGame()
 	lastCount = 0;
 	hlX = 0;
 	hlY = 0;
-	timer = ;
-	timerRate = ;
+	//timer = ;
+	//timerRate = ;
 	
 	// do the overlay sprites
 	SetHlXY(0, 0);

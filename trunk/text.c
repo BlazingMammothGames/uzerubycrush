@@ -30,10 +30,10 @@ void InitText()
 	Fill(0, 0, 30, 28, ' ');
 }
 
-void PrintStr(char x, char y, char *string)
+void PrintStr(char x, char y, signed char *string)
 {
-	char cx = x;
-	for(char i = 0; i < strlen(string); i++)
+	signed char cx = x;
+	for(signed char i = 0; i < strlen(string); i++)
 	{
 		if(string[i] == '\n')
 		{
