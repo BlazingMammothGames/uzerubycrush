@@ -963,7 +963,7 @@ void DoGame()
 		SetHintXY(ndx % 8, ndx / 8);
 		if(playMode == MODE_TIMED)
 		{
-			timer -= playRate * 60 * 5; // remove 5 seconds from the clock!
+			timer -= timerRate * 60 * 10; // remove 10 seconds from the clock!
 			DrawBar(timer, 2000000);
 		}
 	}
