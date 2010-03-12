@@ -80,7 +80,19 @@ u8 GetScoreRank(u32 score, u8 timed)
 	return 1;
 }
 
-void NewHighScore()
+void NewHighScore(u8 i1, u8 i2, u8 i3, u32 score, u8 timed)
 {
+	u8 rank = GetScoreRank(score, timed);
 	
+	// shift the old scores down
+	for(u8 i = rank; i < 3; i++)
+	{
+		u8 oi1, oi2, oi3;
+		u32 oscore;
+		GetHighScore(i - 1 + (timed * 3), &oi1, &oi2, &oi3, &oscore);
+		SetHighScore(i + (timed * 3), oi1, oi2, oi3, oscore);
+	}
+	
+	// set the new score
+	SetHighScore(rank - 1 + (timed * 3), i1, i2, i3, score);
 }

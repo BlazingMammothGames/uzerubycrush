@@ -1,8 +1,8 @@
 /*
-	Bejeweled for the Uzebox
+	Ruby Crush for the Uzebox
 	Copyright 2010, Kenton Hamaluik
 
-	This file is part of The Uzebox Implementation of Pentago.
+	This file is part of Ruby Crush for the Uzebox.
 
 	The Uzebox Implementation of Pentago is free software: you can redistribute
 	it and/or modify it under the terms of the GNU General Public License
@@ -96,6 +96,11 @@ int main()
 {
 	// init sound
 	InitMusicPlayer(patches);
+	
+	// init the hiscores eeprom
+	InitHighScores();
+	//SetHighScore(0, 10, 3, 7, 1234567);
+	//WriteHighScores();
 
 	// show the intro screen
 	DoIntro();
