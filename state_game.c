@@ -122,13 +122,13 @@ void DrawLevel()
 	}
 }
 
-void DrawBar()
+void DrawBar(u32 numerator, u32 denominator)
 {
-	u32 scoreDone = playerScore - lastScoreLevel;
-	u32 scoreTotal = nextScoreLevel - lastScoreLevel;
+	//u32 scoreDone = playerScore - lastScoreLevel;
+	//u32 scoreTotal = nextScoreLevel - lastScoreLevel;
 	
 	// calculate the number of pixel columns to display
-	u32 numCol = (scoreDone << 7) / scoreTotal;
+	u32 numCol = (numerator << 7) / denominator;
 	
 	// calculate the number of full bars to display
 	u8 numFull = (u8)(numCol / 8);
@@ -842,8 +842,27 @@ void NextLevel()
 	// calculate the next level score
 	level++;
 	DrawLevel();
-	lastScoreLevel = nextScoreLevel;
-	nextScoreLevel = 500 * level * level;
+	if(playMode == MODE_CLASSIC)
+	{
+		lastScoreLevel = nextScoreLevel;
+		nextScoreLevel = 500 * level * level;
+	}
+	else if(playMode == MODE_TIMED)
+	{
+		timer = 1000000;
+		if(level == 1)
+			timerRate = 185;
+		else if(level == 2)
+			timerRate = 222;
+		else if(level == 3)
+			timerRate = 277;
+		else if(level == 4)
+			timerRate = 370;
+		else if(level == 5)
+			timerRate = 555;
+		else
+			timerRate = 1111;
+	}
 	
 	// handle the level up
 	HandleLevelUp();
@@ -900,8 +919,8 @@ void InitGame()
 	lastCount = 0;
 	hlX = 0;
 	hlY = 0;
-	//timer = ;
-	//timerRate = ;
+	timer = 1000000;
+	timerRate = 185;
 	
 	// do the overlay sprites
 	SetHlXY(0, 0);
@@ -939,6 +958,13 @@ void DoGame()
 	{
 		u8 ndx = PossibleMoves() - 1;
 		SetHintXY(ndx % 8, ndx / 8);
+	}
+	
+	// decrement the timer
+	if(playMode == MODE_TIMED)
+	{
+		timer -= timerRate;
+		DrawBar(timer, 2000000);
 	}
 
 	// move the highlight around
@@ -1027,6 +1053,12 @@ void DoGame()
 				highScore = playerScore;
 				DrawHighScore();
 			}
+			
+			// add to the timer
+			if(playMode == MODE_TIMED)
+			{
+				timer += (points * 5550);
+			}
 				
 			// check for game over
 			if(PossibleMoves() == 0)
@@ -1049,15 +1081,30 @@ void DoGame()
 				}
 			}
 			
+			// check for time out
+			if(playMode == MODE_TIMED && timer == 0)
+			{
+				HandleGameOver();
+			}
+			
 			// check for new level
 			if(playMode == MODE_CLASSIC)
 			{
 				if(playerScore >= nextScoreLevel)
 					NextLevel();
+									
+				// update the bar
+				DrawBar(playerScore - lastScoreLevel, nextScoreLevel - lastScoreLevel);
+			}
+			else if(playMode == MODE_TIMED)
+			{
+				if(timer >= 2000000)
+					NextLevel();
+			
+				// update the bar
+				DrawBar(timer, 2000000);
 			}
 				
-			// update the bar
-			DrawBar();
 		}
 		
 		HideGrab();

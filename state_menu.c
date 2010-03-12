@@ -89,7 +89,37 @@ void InitMenu_HiScores()
 	// fill the bg
 	Fill(0, 0, 30, 28, ' ');
 	
+	//|    classic         timed     |\\ 
+	//|  KDH 9999999    KDH 9999999  |\\
 	PrintStrCenter(10, "High Scores");
+	PrintStr(4, 12, "Classic");
+	PrintStr(19, 12, "Timed");
+	
+	u8 i1, i2, i3;
+	u32 score;
+	s8 buffer[8];
+	for(u8 i = 0; i < 3; i++)
+	{
+		GetHighScore(i, &i1, &i2, &i3, &score);
+		sprintf(buffer, "%c%c%c", 'A' + (s8)i1, 'A' + (s8)i2, 'A' + (s8)i3);
+		PrintStr(2, 13 + i, buffer);
+		/*PrintStr(2, 13 + i, "A");
+		PrintStr(3, 13 + i, "A");
+		PrintStr(4, 13 + i, "A");*/
+		sprintf(buffer, "%7lu", score);
+		PrintStr(6, 13 + i, buffer);
+	}
+	for(u8 i = 0; i < 3; i++)
+	{
+		GetHighScore(i + 3, &i1, &i2, &i3, &score);
+		sprintf(buffer, "%c%c%c", 'A' + (s8)i1, 'A' + (s8)i2, 'A' + (s8)i3);
+		PrintStr(17, 13 + i, buffer);
+		/*PrintStr(17, 13 + i, "A");
+		PrintStr(18, 13 + i, "A");
+		PrintStr(19, 13 + i, "A");*/
+		sprintf(buffer, "%7lu", score);
+		PrintStr(21, 13 + i, buffer);
+	}
 	
 	// fade back in
 	FadeIn(1, true);
