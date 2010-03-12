@@ -1,7 +1,6 @@
 // the menu states
 #define MENUSTATE_MAIN			(0)
-#define MENUSTATE_HOWTOPLAY		(1)
-#define MENUSTATE_CREDITS		(2)
+#define MENUSTATE_HISCORES		(1)
 char menuState;
 char nextMenuState;
 
@@ -9,8 +8,7 @@ char nextMenuState;
 #define MENUOPT_CLASSIC		(0)
 #define MENUOPT_TIMED		(1)
 #define MENUOPT_MUSIC		(2)
-#define MENUOPT_HOW			(3)
-#define MENUOPT_CREDITS		(4)
+#define MENUOPT_HISCORES	(3)
 char currentOpt = 0;
 
 void InitMenu_Main()
@@ -25,66 +23,7 @@ void InitMenu_Main()
 	PrintStr(10, 12, "Play Classic");
 	PrintStr(10, 13, "Play Timed");
 	PrintStr(10, 14, "Music (off)");
-	PrintStr(10, 15, "How To Play");
-	PrintStr(10, 16, "Credits");
-	
-	// fade back in
-	FadeIn(1, true);
-}
-
-void InitMenu_How()
-{
-	// fill the bg
-	Fill(0, 0, 30, 28, ' ');
-	
-	PrintStrCenter(1, "How To Play");
-	
-	//             ".#.#.#.#.#.#.#.#.#.#.#.#.#.#.#"
-	PrintStr(0, 3, "The goal of the game is to");
-	PrintStr(0, 4, "swap two gems that are next to");
-	PrintStr(0, 5, "each other and create a match");
-	PrintStr(0, 6, "of three or more similar gems.");
-	PrintStr(0, 7, "You can only swap gems that");
-	PrintStr(0, 8, "will result in a match.");
-	
-	//              ".#.#.#.#.#.#.#.#.#.#.#.#.#.#.#"
-	PrintStr(0, 10,  "As you make matches, the bar");
-	PrintStr(0, 11, "at the bottom of the screen");
-	PrintStr(0, 12, "starts to fill up. When the");
-	PrintStr(0, 13, "bar is completely full, you");
-	PrintStr(0, 14, "will progress on to the next");
-	PrintStr(0, 15, "level. When there are no more");
-	PrintStr(0, 16, "possible moves on the screen,");
-	PrintStr(0, 17, "the game ends.   ");
-	
-	PrintStrCenter(26, "Press B to return");
-	
-	// fade back in
-	FadeIn(1, true);
-}
-
-void InitMenu_Credits()
-{
-	// fill the bg
-	Fill(0, 0, 30, 28, ' ');
-	
-	PrintStrCenter(1, "Credits");
-	
-	//                ".#.#.#.#.#.#.#.#.#.#.#.#.#.#.#"
-	PrintStrCenter(3, "This is merely a port of");
-	PrintStrCenter(4, "Bejeweled to the Uzebox. I am");
-	PrintStrCenter(5, "NOT the original creator of");
-	PrintStrCenter(6, "this game - PopCap is. All");
-	PrintStrCenter(7, "rights belong to them.");
-	
-	PrintStr(1, 9, "Programming:");
-	PrintStrCenter(10, "Kenton Hamaluik");
-	PrintStr(1, 12, "Graphics:");
-	PrintStrCenter(13, "Kenton Hamaluik");
-	PrintStr(1, 15, "Music & SFX:");
-	PrintStrCenter(16, "Kenton Hamaluik");
-	
-	PrintStrCenter(26, "Press B to return");
+	PrintStr(10, 15, "High Scores");
 	
 	// fade back in
 	FadeIn(1, true);
@@ -93,7 +32,7 @@ void InitMenu_Credits()
 void DoMenu_Main()
 {	
 	// move the selector
-	if((padPressed[0] | padPressed[1]) & BTN_DOWN && currentOpt < 4)
+	if((padPressed[0] | padPressed[1]) & BTN_DOWN && currentOpt < 3)
 	{
 		//TriggerFx(4, 0xFF, true);
 		SetTile(8, 12 + currentOpt, ' ');
@@ -140,20 +79,23 @@ void DoMenu_Main()
 				PrintStr(16, 14, "(On) ");
 			}
 		}
-		else if(currentOpt == MENUOPT_HOW)
-			nextMenuState = MENUSTATE_HOWTOPLAY;
-		else if(currentOpt == MENUOPT_CREDITS)
-			nextMenuState = MENUSTATE_CREDITS;
+		else if(currentOpt == MENUOPT_HISCORES)
+			nextMenuState = MENUSTATE_HISCORES;
 	}
 }
 
-void DoMenu_How()
+void InitMenu_HiScores()
 {
-	if((padPressed[0] | padPressed[1]) & BTN_B)
-		nextMenuState = MENUSTATE_MAIN;
+	// fill the bg
+	Fill(0, 0, 30, 28, ' ');
+	
+	PrintStrCenter(10, "High Scores");
+	
+	// fade back in
+	FadeIn(1, true);
 }
 
-void DoMenu_Credits()
+void DoMenu_HiScores()
 {
 	if((padPressed[0] | padPressed[1]) & BTN_B)
 		nextMenuState = MENUSTATE_MAIN;
@@ -178,10 +120,8 @@ void DoMenu()
 	
 		if(nextMenuState == MENUSTATE_MAIN)
 			InitMenu_Main();
-		else if(nextMenuState == MENUSTATE_HOWTOPLAY)
-			InitMenu_How();
-		else if(nextMenuState == MENUSTATE_CREDITS)
-			InitMenu_Credits();
+		else if(nextMenuState == MENUSTATE_HISCORES)
+			InitMenu_HiScores();
 		
 		menuState = nextMenuState;
 		nextMenuState = -1;
@@ -189,8 +129,6 @@ void DoMenu()
 	
 	if(menuState == MENUSTATE_MAIN)
 		DoMenu_Main();
-	else if(menuState == MENUSTATE_HOWTOPLAY)
-		DoMenu_How();
-	else if(menuState == MENUSTATE_CREDITS)
-		DoMenu_Credits();
+	else if(menuState == MENUSTATE_HISCORES)
+		DoMenu_HiScores();
 }
