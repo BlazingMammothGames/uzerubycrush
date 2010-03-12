@@ -1,4 +1,4 @@
-#define RUBYCRUSH_EEPROM_ID	(99)
+#define RUBYCRUSH_EEPROM_ID	(21)
 
 struct EepromBlockStruct eeprom;
 
@@ -28,14 +28,14 @@ void GetHighScore(u8 number, u8 *i1, u8 *i2, u8 *i3, u32 *score)
 	*i3 = (eeprom.data[offset + 1] & 62) >> 1;
 	
 	// get the score
-	*score = (u32)(((u32)eeprom.data[offset + 2] << 16) | ((u16)eeprom.data[offset + 2] << 8) | (eeprom.data[offset + 2]));
+	*score = (u32)(((u32)eeprom.data[offset + 2] << 16) | ((u32)eeprom.data[offset + 3] << 8) | ((u32)eeprom.data[offset + 4]));
 }
 
 void InitHighScores()
 {
 	// make sure we're formatted
-	if(!isEepromFormatted())
-		FormatEeprom();
+	/*if(!isEepromFormatted())
+		FormatEeprom();*/
 		
 	// now read in the struct
 	EepromReadBlock(RUBYCRUSH_EEPROM_ID, &eeprom);
