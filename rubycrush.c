@@ -99,8 +99,15 @@ int main()
 	
 	// init the hiscores eeprom
 	InitHighScores();
-	//SetHighScore(0, 10, 3, 7, 1234567);
-	//WriteHighScores();
+	SetHighScore(0, 10, 3, 7, 1234567);
+	WriteHighScores();
+	
+	u8 ii;
+	u32 score;
+	GetHighScore(0, &ii, &ii, &ii, &score);
+	highScoreClassic = score;
+	GetHighScore(3, &ii, &ii, &ii, &score);
+	highScoreTimed = score;
 
 	// show the intro screen
 	DoIntro();

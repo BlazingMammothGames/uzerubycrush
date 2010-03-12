@@ -3,7 +3,7 @@ u8 jewels[8][8], tempJewels[8][8];
 u8 combo;
 u32 level = 1;
 u32 playerScore = 0;
-u32 highScore = 0;
+u32 highScoreClassic = 0, highScoreTimed = 0;
 u32 lastScoreLevel = 0;
 u32 nextScoreLevel = 500;
 u8 gameOver = 0;
@@ -74,6 +74,8 @@ void DrawScore()
 
 void DrawHighScore()
 {
+	u32 highScore = (playMode == MODE_CLASSIC) ? (highScoreClassic) : (highScoreTimed);
+
 	u8 left;
 	if(highScore > 999999)
 		left = 0;
@@ -768,6 +770,7 @@ u32 ClearAndDropGems()
 				combomod = 200;
 				
 			score += (((i + 1) * 10) + combomod);
+			timer += ((i + 1) + (combomod / 10)) * 36000;
 		}
 	}
 	score *= level;
@@ -1048,18 +1051,23 @@ void DoGame()
 			DrawPoints(points);
 			playerScore += points;
 			DrawScore();
-			if(playerScore > highScore)
+			if(playMode == MODE_CLASSIC)
 			{
-				highScore = playerScore;
-				DrawHighScore();
+				if(playerScore > highScoreClassic)
+				{
+					highScoreClassic = playerScore;
+					DrawHighScore();
+				}
+			}
+			else
+			{
+				if(playerScore > highScoreTimed)
+				{
+					highScoreTimed = playerScore;
+					DrawHighScore();
+				}
 			}
 			
-			// add to the timer
-			if(playMode == MODE_TIMED)
-			{
-				timer += (points * 5550);
-			}
-				
 			// check for game over
 			if(PossibleMoves() == 0)
 			{
