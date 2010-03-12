@@ -10,7 +10,7 @@ u8 gameOver = 0;
 u8 hlX, hlY, grabX, grabY;
 u32 frameCount = 0, lastCount = 0;
 u8 movingHl = 0, grabbing = 0, showHint = 0;
-u32 timer, timerRate;
+s32 timer, timerRate;
 
 u32 pow10(s8 p)
 {
@@ -1089,12 +1089,6 @@ void DoGame()
 				}
 			}
 			
-			// check for time out
-			if(playMode == MODE_TIMED && timer == 0)
-			{
-				HandleGameOver();
-			}
-			
 			// check for new level
 			if(playMode == MODE_CLASSIC)
 			{
@@ -1131,6 +1125,12 @@ void DoGame()
 	{
 		grabbing = 0;
 		HideGrab();
+	}
+			
+	// check for time out
+	if(playMode == MODE_TIMED && timer <= 0)
+	{
+		HandleGameOver();
 	}
 	
 	// update frame count
