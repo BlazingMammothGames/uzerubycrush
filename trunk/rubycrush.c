@@ -99,13 +99,13 @@ int main()
 	
 	// init the hiscores eeprom
 	InitHighScores();
-	SetHighScore(0, 10, 3, 7, 3000);
+	/*SetHighScore(0, 10, 3, 7, 3000);
 	SetHighScore(1, 10, 3, 7, 2000);
 	SetHighScore(2, 10, 3, 7, 1000);
 	SetHighScore(3, 10, 3, 7, 9000);
 	SetHighScore(4, 10, 3, 7, 6000);
 	SetHighScore(5, 10, 3, 7, 3000);
-	WriteHighScores();
+	WriteHighScores();*/
 	
 	u8 ii;
 	u32 score;
