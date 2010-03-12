@@ -37,6 +37,8 @@ void InitHighScores()
 	/*if(!isEepromFormatted())
 		FormatEeprom();*/
 		
+	eeprom.id = RUBYCRUSH_EEPROM_ID;
+		
 	// now read in the struct
 	EepromReadBlock(RUBYCRUSH_EEPROM_ID, &eeprom);
 }
