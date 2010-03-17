@@ -71,6 +71,18 @@ const char patch07[] PROGMEM ={
 0,PATCH_END 
 };
 
+// game over
+const char patch08[] PROGMEM ={
+0,PC_WAVE,4,
+0,PC_ENV_SPEED,-5,
+0,PC_PITCH,52,
+0,PC_NOTE_UP,2,
+10,PC_NOTE_DOWN,10, 
+10,PC_NOTE_DOWN,10, 
+30,PC_NOTE_CUT,0,
+0,PATCH_END 
+};
+
 const struct PatchStruct patches[] PROGMEM = {
 {0,NULL,patch00,0,0},
 {0,NULL,patch01,0,0},
@@ -80,4 +92,5 @@ const struct PatchStruct patches[] PROGMEM = {
 {0,NULL,patch05,0,0},
 {0,NULL,patch06,0,0},
 {0,NULL,patch07,0,0},
+{0,NULL,patch08,0,0},
 };

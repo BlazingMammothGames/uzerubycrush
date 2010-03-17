@@ -1,17 +1,3 @@
-// globals
-u8 jewels[8][8], tempJewels[8][8];
-u8 combo;
-u32 level = 1;
-u32 playerScore = 0;
-u32 highScoreClassic = 0, highScoreTimed = 0;
-u32 lastScoreLevel = 0;
-u32 nextScoreLevel = 500;
-u8 gameOver = 0;
-u8 hlX, hlY, grabX, grabY;
-u32 frameCount = 0, lastCount = 0;
-u8 movingHl = 0, grabbing = 0, showHint = 0;
-s32 timer, timerRate;
-
 u32 pow10(s8 p)
 {
 	u32 ret = 1;
@@ -22,7 +8,7 @@ u32 pow10(s8 p)
 
 void ClearPoints()
 {
-	Fill(2, 18, 7, 1, MAP_SCORE_PURPLE);
+	Fill(2, 20, 7, 1, MAP_SCORE_PURPLE);
 }
 
 void DrawPoints(u32 points)
@@ -42,9 +28,9 @@ void DrawPoints(u32 points)
 		width = 1;
 
 	u8 start = ((7 - width) / 2) + 3;
-	SetTile(start - 1, 18, POINT_OFFSET + 10);
+	SetTile(start - 1, 20, POINT_OFFSET + 10); // +
 	for(u8 x = 0; x < width; x++)
-		SetTile(start + x, 18, POINT_OFFSET + ((points % pow10(width - x)) / pow10(width - x - 1)));
+		SetTile(start + x, 20, POINT_OFFSET + ((points % pow10(width - x)) / pow10(width - x - 1)));
 }
 
 void DrawScore()
@@ -121,6 +107,31 @@ void DrawLevel()
 	for(s8 x = 6; x >= left; x--)
 	{
 		SetTile(x + 2, 11, SCORE_OFFSET + ((level % pow10((6 - x) + 1)) / pow10(6 - x)));
+	}
+}
+
+void DrawHints()
+{
+	u8 left;
+	if(hintsLeft > 999999)
+		left = 0;
+	else if(hintsLeft > 99999)
+		left = 1;
+	else if(hintsLeft > 9999)
+		left = 2;
+	else if(hintsLeft > 999)
+		left = 3;
+	else if(hintsLeft > 99)
+		left = 4;
+	else if(hintsLeft > 9)
+		left = 5;
+	else
+		left = 6;
+	
+	Fill(2, 13, 7, 1, SCORE_BLANK);
+	for(s8 x = 6; x >= left; x--)
+	{
+		SetTile(x + 2, 13, SCORE_OFFSET + ((hintsLeft % pow10((6 - x) + 1)) / pow10(6 - x)));
 	}
 }
 
@@ -269,10 +280,17 @@ void HandleLevelUp()
 
 void HandleGameOver()
 {
+	TriggerFx(8, 0xff, true);
 	DrawMap2(13, 12, map_game_over);
 	
 	HideHl();
 	HideGrab();
+	
+	// see if we got a new highscore or not
+	nextMenuState = MENUSTATE_MAIN;
+	u8 scoreRank = GetScoreRank(playerScore, playMode);
+	if(scoreRank < 4)
+		nextMenuState = MENUSTATE_NEWHIGHSCORE;
 	
 	gameOver = 1;
 	int buttons;
@@ -293,25 +311,61 @@ void HandlePause()
 	HideGrab();
 	
 	u8 selector = 0;
-	int buttons;
 	while(1)
 	{
 		WaitVsync(1);
-		buttons = ReadJoypad(0);
-		if(buttons & BTN_DOWN && selector == 0)
+		
+		// handle the input
+		padHeld[0] = ReadJoypad(0);
+		padPressed[0] = padHeld[0] & (padHeld[0] ^ padPrev[0]);
+		padReleased[0] = padPrev[0] & (padHeld[0] ^ padPrev[0]);
+		padPrev[0] = padHeld[0];
+		padHeld[1] = ReadJoypad(1);
+		padPressed[1] = padHeld[1] & (padHeld[1] ^ padPrev[1]);
+		padReleased[1] = padPrev[1] & (padHeld[1] ^ padPrev[1]);
+		padPrev[1] = padHeld[1];
+		
+		// move the selecting
+		if(padPressed[0] & BTN_DOWN && selector < 2)
+			selector++;
+		else if(padPressed[0] & BTN_UP && selector > 0)
+			selector--;
+			
+		// check for music selection
+		if(selector == 2 && padPressed[0] & BTN_RIGHT && musicOn == 1)
 		{
-			SetTile(14, 13, MAP_DIALOG_PURPLE);
-			SetTile(15, 14, MAP_PAUSE_SELECT);
-			selector = 1;
+			musicOn = 0;
+			StopSong();
 		}
-		else if(buttons & BTN_UP && selector == 1)
+		else if(selector == 2 && padPressed[0] & BTN_LEFT && musicOn == 0)
 		{
-			SetTile(15, 14, MAP_DIALOG_PURPLE);
-			SetTile(14, 13, MAP_PAUSE_SELECT);
-			selector = 0;
+			musicOn = 1;
+			StartSong(song_gobby);
 		}
 		
-		if(buttons & BTN_A)
+		if(padPressed[0] & (BTN_UP | BTN_RIGHT | BTN_DOWN | BTN_LEFT))
+		{
+			// clear the selector
+			SetTile(14, 13, MAP_DIALOG_PURPLE);
+			SetTile(15, 14, MAP_DIALOG_PURPLE);
+			SetTile(15, 16, MAP_DIALOG_PURPLE);
+			SetTile(18, 16, MAP_DIALOG_PURPLE);
+			
+			// set the selector
+			if(selector == 0)
+				SetTile(14, 13, MAP_PAUSE_SELECT);
+			else if(selector == 1)
+				SetTile(15, 14, MAP_PAUSE_SELECT);
+			else if(selector == 2)
+			{
+				if(musicOn == 1)
+					SetTile(15, 16, MAP_PAUSE_SELECT);
+				else
+					SetTile(18, 16, MAP_PAUSE_SELECT);
+			}
+		}
+		
+		if(padPressed[0] & BTN_A && (selector == 0 || selector == 1))
 		{
 			for(u8 y = 0; y < 8; y++)
 				for(u8 x = 0; x < 8; x++)
@@ -924,6 +978,10 @@ void InitGame()
 	hlY = 0;
 	timer = 1000000;
 	timerRate = 185;
+	if(playMode == MODE_CLASSIC)
+		hintsLeft = 3;
+	else
+		hintsLeft = 0;
 	
 	// do the overlay sprites
 	SetHlXY(0, 0);
@@ -934,6 +992,7 @@ void InitGame()
 	DrawScore();
 	DrawHighScore();
 	DrawLevel();
+	DrawHints();
 	
 	// fade back in
 	FadeIn(1, true);
@@ -959,12 +1018,21 @@ void DoGame()
 	// check for hint
 	if(padPressed[0] & BTN_SELECT)
 	{
-		u8 ndx = PossibleMoves() - 1;
-		SetHintXY(ndx % 8, ndx / 8);
-		if(playMode == MODE_TIMED)
+		if(playMode == MODE_CLASSIC && hintsLeft > 0)
 		{
+			u8 ndx = PossibleMoves() - 1;
+			SetHintXY(ndx % 8, ndx / 8);
+			hintsLeft--;
+			DrawHints();
+		}
+		else if(playMode == MODE_TIMED)
+		{
+			u8 ndx = PossibleMoves() - 1;
+			SetHintXY(ndx % 8, ndx / 8);
 			timer -= timerRate * 60 * 10; // remove 10 seconds from the clock!
 			DrawBar(timer, 2000000);
+			hintsLeft++;
+			DrawHints();
 		}
 	}
 	
