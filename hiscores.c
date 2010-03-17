@@ -5,7 +5,7 @@ struct EepromBlockStruct eeprom;
 void SetHighScore(u8 number, u8 i1, u8 i2, u8 i3, u32 score)
 {
 	// calculate the offset byte we're starting at
-	u8 offset = (number * 5) + 2;
+	u8 offset = (number * 5);
 	
 	// set the initials
 	eeprom.data[offset + 0] = (u8)((i1 << 3) | ((i2 & 28) >> 2));
@@ -20,7 +20,7 @@ void SetHighScore(u8 number, u8 i1, u8 i2, u8 i3, u32 score)
 void GetHighScore(u8 number, u8 *i1, u8 *i2, u8 *i3, u32 *score)
 {
 	// calculate the offset byte we're starting at
-	u8 offset = (number * 5) + 2;
+	u8 offset = (number * 5);
 	
 	// get the initials
 	*i1 = eeprom.data[offset + 0] >> 3;
@@ -97,4 +97,7 @@ void NewHighScore(u8 i1, u8 i2, u8 i3, u32 score, u8 timed)
 	
 	// set the new score
 	SetHighScore(rank - 1 + (timed * 3), i1, i2, i3, score);
+	
+	// and write it out
+	WriteHighScores();
 }

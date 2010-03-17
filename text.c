@@ -30,10 +30,10 @@ void InitText()
 	Fill(0, 0, 30, 28, ' ');
 }
 
-void PrintStr(char x, char y, signed char *string)
+void PrintStr(char x, char y, char *string)
 {
-	signed char cx = x;
-	for(signed char i = 0; i < strlen(string); i++)
+	char cx = x;
+	for(char i = 0; i < strlen(string); i++)
 	{
 		if(string[i] == '\n')
 		{
@@ -48,41 +48,8 @@ void PrintStr(char x, char y, signed char *string)
 	}
 }
 
-void PrintStr_P(char x, char y, char *string)
-{
-	char cx = x;
-	char c;
-	int i = 0;
-	
-	while(1)
-	{
-		c = pgm_read_byte(&(string[i++]));
-		
-		if(c == '\0')
-		{
-			break;
-		}
-		else if(c == '\n')
-		{
-			cx = x;
-			y++;
-		}
-		else
-		{
-			SetTile(cx, y, c);
-			cx++;
-		}
-	}
-}
-
 void PrintStrCenter(char y, char *string)
 {
 	char x = (30 - strlen(string)) / 2;
 	PrintStr(x, y, string);
-}
-
-void PrintStrCenter_P(char y, char *string)
-{
-	char x = (30 - strlen_P(string)) / 2;
-	PrintStr_P(x, y, string);
 }

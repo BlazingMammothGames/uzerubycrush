@@ -26,7 +26,6 @@
 #include <uzebox.h>
 
 // graphics
-#include "gfx_mammoth.c"
 #include "gfx_game.c"
 #include "gfx_highlight.c"
 #include "gfx_atascii.c"
@@ -36,27 +35,9 @@
 #include "msc_gobby.c"
 
 // utilities
+#include "globals.c"
 #include "text.c"
 #include "hiscores.c"
-
-// joypad states
-int padHeld[2] = {0,0};
-int padPressed[2] = {0,0};
-int padReleased[2] = {0,0};
-
-// globals
-char musicOn = 0;
-char playMode;
-
-// game states
-#define STATE_MENU	(0)
-#define STATE_GAME	(1)
-char gameState;
-char nextState;
-
-// play modes
-#define MODE_CLASSIC	(0)
-#define MODE_TIMED		(1)
 
 // states
 #include "state_menu.c"
@@ -68,10 +49,18 @@ void DoIntro()
 	// random number generator seed
 	u16 rndSeed = 0;
 	
-	SetTileTable(tiles_mammoth);
-	Fill(0, 0, 30, 28, 0);
-	WaitVsync(1);
-	DrawMap2(0, 0, map_mammoth);
+	// fade out
+	FadeOut(1, true);
+	
+	// set the screen tiles
+	SetTileTable(tiles_atascii);
+	// fill the bg
+	Fill(0, 0, 30, 28, ' ');
+	DrawMap2(11, 9, map_mammoth_top);
+	DrawMap2(11, 13, map_mammoth_bot);
+	PrintStrCenter(17, "Blazing Mammoth Games");
+	
+	// fade in
 	FadeIn(1, true);
 	
 	// game loop
@@ -99,13 +88,6 @@ int main()
 	
 	// init the hiscores eeprom
 	InitHighScores();
-	/*SetHighScore(0, 10, 3, 7, 3000);
-	SetHighScore(1, 10, 3, 7, 2000);
-	SetHighScore(2, 10, 3, 7, 1000);
-	SetHighScore(3, 10, 3, 7, 9000);
-	SetHighScore(4, 10, 3, 7, 6000);
-	SetHighScore(5, 10, 3, 7, 3000);
-	WriteHighScores();*/
 	
 	u8 ii;
 	u32 score;
@@ -119,9 +101,7 @@ int main()
 	
 	// set the initial state
 	nextState = STATE_MENU;
-	
-	// joystick previous states
-	int padPrev[2] = {0,0};
+	nextMenuState = MENUSTATE_MAIN;
 	
 	// now the game loop
 	while(1)
