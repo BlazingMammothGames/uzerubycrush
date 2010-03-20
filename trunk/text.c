@@ -1,15 +1,15 @@
 /*
-	Bejeweled for the Uzebox
+	Ruby Crush for the Uzebox
 	Copyright 2010, Kenton Hamaluik
 
-	This file is part of The Uzebox Implementation of Pentago.
+	This file is part of Ruby Crush for the Uzebox.
 
-	The Uzebox Implementation of Pentago is free software: you can redistribute
+	Ruby Crush for the Uzebox is free software: you can redistribute
 	it and/or modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation, either version 3 of the
 	License, or (at your option) any later version.
 
-	The Uzebox Implementation of Pentago is distributed in the hope that it
+	Ruby Crush for the Uzebox is distributed in the hope that it
 	will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
