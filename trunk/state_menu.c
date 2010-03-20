@@ -9,7 +9,11 @@ void InitMenu_Main()
 	
 	PrintStr(10, 12, "Play Classic");
 	PrintStr(10, 13, "Play Timed");
-	PrintStr(10, 14, "Music (off)");
+	PrintStr(10, 14, "Music");
+	if(!musicOn)
+		PrintStr(16, 14, "(Off)");
+	else
+		PrintStr(16, 14, "(On) ");
 	PrintStr(10, 15, "High Scores");
 	
 	// fade back in
