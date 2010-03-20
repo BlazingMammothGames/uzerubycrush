@@ -264,6 +264,10 @@ void HandleLevelUp()
 	HideHl();
 	HideGrab();
 	
+	// give them an extra hint
+	hintsLeft++;
+	DrawHints();
+	
 	int buttons;
 	while(1)
 	{
